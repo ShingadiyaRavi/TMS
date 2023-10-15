@@ -4,7 +4,7 @@ function checkAccess() {
     let data = JSON.parse(sessionStorage.getItem('user'));
     if (data?.isAdmin != 0 || data == null) {
         window.location.href = localStorage.getItem('url') + 'login.html';
-    }else{
+    } else {
         document.getElementById('username').innerHTML = userInformation.username;
         getParentTaskList(userInformation.username);
         getChildTaskList(userInformation.username);
@@ -24,7 +24,16 @@ function getParentTaskList(username) {
         if (element != undefined) {
             let row = parent.insertRow(1);
             row.insertCell(0).innerHTML = element.taskId;
-            row.insertCell(1).innerHTML = element.status;
+            if (element.status == 'new') {
+                row.insertCell(1).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-primary">' + element.status + '</span>';
+            } else if (element.status == 'active') {
+                row.insertCell(1).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-warning">' + element.status + '</span>';
+            } else if (element.status == 'completed') {
+                row.insertCell(1).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-success">' + element.status + '</span>';
+            } else {
+                row.insertCell(1).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-danger">' + element.status + '</span>';
+            }
+            // row.insertCell(1).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-primary">' + element.status + '</span>';
             row.insertCell(2).innerHTML = element.taskName;
             row.insertCell(3).innerHTML = element.taskDescription;
             row.insertCell(4).innerHTML = element.taskAmount + '$';
@@ -46,14 +55,33 @@ function getChildTaskList(username) {
     });
 
     let child = document.getElementById('childTask');
+
+
     temp.forEach(element => {
         if (element != undefined) {
+            let checkBox = document.createElement('input');
+            checkBox.setAttribute('type', 'checkbox');
+            checkBox.setAttribute('value', 'false');
+            if (parseInt(element.isCompleted)) {
+                checkBox.checked = true;
+            }
+            // checkBox.checked = parseInt(element.isCompleted) ? 'true': 'false';
             let row = child.insertRow(1);
             row.insertCell(0).innerHTML = element.childTaskId;
             row.insertCell(1).innerHTML = element.parentTaskId;
             row.insertCell(2).innerHTML = element.subTaskName;
             row.insertCell(3).innerHTML = element.subTaskDescription;
             row.insertCell(4).innerHTML = element.subTaskAmount + '$';
+            if (element.isCompleted) {
+                // row.insertCell(5).innerHTML= '<input type="checkbox" id="check" value="'+element.isCompleted+'" checked="'+element.isCompleted+'" >'
+                row.insertCell(5).innerHTML = '<button type="button" class="btn btn-success" disabled>Completed</button>'
+            } else {
+                // row.insertCell(5).innerHTML= '<input type="checkbox" id="check" value="'+element.isCompleted+'">'
+                row.insertCell(5).innerHTML = '<button type="button" class="btn btn-warning" onclick="changeStatus(' + element.childTaskId + ',' + element.parentTaskId + ')" >Make It Complete</button>'
+
+            }
+
+
         }
     });
 }
@@ -69,44 +97,58 @@ function createSubTask() {
         'subTaskDescription': document.getElementById('subTaskDescription').value,
         'subTaskAmount': document.getElementById('subTaskAmount').value,
         'createdBy': userInformation.username,
+        'isCompleted': 0,
     }
 
     if (object.subTaskName == null || object.subTaskName == undefined || object.subTaskName == '') {
-        alert("Please fill the taskname");
+        let subTaskname = document.getElementById('errorSubTaskname')
+        subTaskname.innerHTML = 'Please enter sub taskname'
+        subTaskname.classList.add('errorMessage');
         return;
     }
     if (object.subTaskDescription == null || object.subTaskDescription == undefined || object.subTaskDescription == '') {
-        alert("Please fill the task Description");
+        let subTaskDescription = document.getElementById('errorSubTaskDescription')
+        subTaskDescription.innerHTML = 'Please enter sub task description'
+        subTaskDescription.classList.add('errorMessage');
         return;
     }
     if (object.subTaskAmount != null || object.subTaskAmount != undefined || object.subTaskAmount != '') {
-        let oldData = childTaskList.map(x=>{
-            if(parseInt(x.parentTaskId) == parseInt(object.parentTaskId)){
+        let oldData = childTaskList.map(x => {
+            if (parseInt(x.parentTaskId) == parseInt(object.parentTaskId)) {
                 return x.subTaskAmount;
             }
         });
         let totalSum = 0;
         oldData.forEach(element => {
-            if(element != undefined){
-                totalSum+=parseInt(element);
+            if (element != undefined) {
+                totalSum += parseInt(element);
             }
         });
-        
-        let actualAmount = 0;
-        parentTaskList.map(x=>{
-            if(x.taskId == object.parentTaskId){
-                actualAmount = parseInt(x.taskAmount);
-                x.taskAmount
-            }
-        });
-        totalSum+= parseInt(object.subTaskAmount);
 
-        if (parseInt(object.subTaskAmount) < 0) {
-            alert("Please fill the task Amount greater than 0");
+        let actualAmount = 0;
+        parentTaskList.map(x => {
+            if (x.taskId == object.parentTaskId) {
+                actualAmount = parseInt(x.taskAmount);
+            }
+        });
+        totalSum += parseInt(object.subTaskAmount);
+
+        if (parseInt(object.subTaskAmount) < 1) {
+            let subTaskAmount = document.getElementById('errorSubTaskAmount')
+            subTaskAmount.innerHTML = 'Please fill the task Amount greater than equal to 1';
+            subTaskAmount.classList.add('errorMessage');
             return;
-        }else if (!(totalSum <= actualAmount)){
-            alert("Total Sub Task Amount Should Be Less Than or Equal to Parent Task Amount");
+            // alert("Please fill the task Amount greater than equal to 1 !");
+            // return;
+        } else if (totalSum > actualAmount) {
+            if ((actualAmount - totalSum) < 0) {
+                let subTaskAmount = document.getElementById('errorSubTaskAmount')
+            subTaskAmount.innerHTML = 'You need to add task amount less than or equal to :'+(actualAmount - (totalSum - parseInt(object.subTaskAmount)));
+            subTaskAmount.classList.add('errorMessage');
             return;
+                // alert("You need to add task amount less than or equal to : " + (actualAmount - (totalSum - parseInt(object.subTaskAmount))));
+                // return;
+            }
         }
     }
 
@@ -118,9 +160,62 @@ function createSubTask() {
     row.insertCell(2).innerHTML = 'subTaskName';
     row.insertCell(3).innerHTML = 'subTaskDescription';
     row.insertCell(4).innerHTML = 'subTaskAmount';
+    row.insertCell(5).innerHTML = 'status';
 
     childTaskList.push(object);
     localStorage.setItem('childTaskList', JSON.stringify(childTaskList));
+    let childData = JSON.parse(localStorage.getItem('childTaskList'));
+    childData = childData[childData.length - 1];
+    let parentData = JSON.parse(localStorage.getItem('taskList'));
+    parentData = parentData.map(x => {
+        if (x.taskId == parseInt(childData.parentTaskId)) {
+            x.status = 'active';
+            return x;
+        } else {
+            return x;
+        }
+    });
+
+    localStorage.setItem('taskList', JSON.stringify(parentData));
     getParentTaskList(userInformation.username);
     getChildTaskList(userInformation.username);
+    location.reload();
+}
+
+
+function changeStatus(childId, parentId) {
+    let childData = JSON.parse(localStorage.getItem('childTaskList'));
+
+    childData.forEach(element => {
+        if (element.childTaskId == childId) {
+            element.isCompleted = 1;
+        }
+    });
+    localStorage.setItem('childTaskList', JSON.stringify(childData));
+
+    childData = JSON.parse(localStorage.getItem('childTaskList'));
+    let parentData = JSON.parse(localStorage.getItem('taskList'));
+
+    let parentCompleted = childData.map(x => {
+        if (x.parentTaskId == parentId) {
+            if (x.childTaskId == x.childTaskId && x.isCompleted == 1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
+    if (!parentCompleted.includes(0)) {
+        parentData.forEach(element => {
+            if (element.taskId == parentId) {
+                element.status = 'completed';
+            }
+        });
+    } else {
+        // alert("Need complete all subtask which are related which same parent task");
+    }
+
+    localStorage.setItem('taskList', JSON.stringify(parentData));
+    location.reload();
 }
