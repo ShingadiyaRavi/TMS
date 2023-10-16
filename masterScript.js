@@ -28,7 +28,14 @@ function getUserList() {
             let row = parent.insertRow(1);
             row.insertCell(0).innerHTML = element.username;
             row.insertCell(1).innerHTML = element.password;
-            row.insertCell(2).innerHTML = element.isAdmin;
+            // row.insertCell(2).innerHTML = element.isAdmin;
+            if(element.isAdmin == 1) {
+                row.insertCell(2).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-success">' + 'Admin' + '</span>';
+            }else if (element.isAdmin == 0){
+                row.insertCell(2).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-warning">' + 'Member' + '</span>';
+            }else{
+                row.insertCell(2).innerHTML = '<span class="rounded-pill px-3 p-0 btn btn-danger">' + 'Master' + '</span>';
+            }
         }
     });
 }
@@ -55,19 +62,26 @@ function createUser() {
         username.classList.add('errorMessage');
         return;
     } else if (object.username != null || object.username != '') {
-        users.forEach(element => {
-            if (element.username == object.username) {
-                isTaken = true;
+        let regex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+        let result = regex.test(object.username);
+        if(result){
+            users.forEach(element => {
+                if (element.username == object.username) {
+                    isTaken = true;
+                }
+            });
+            if (isTaken) {
+                let username = document.getElementById('errorUsername')
+                username.innerHTML = 'Username is already taken please try to another username !'
+                username.classList.add('errorMessage');
+                return;
             }
-        });
-
-        if (isTaken) {
-            let username = document.getElementById('errorUsername')
-            username.innerHTML = 'Username is already taken please try to another username !'
-            username.classList.add('errorMessage');
-            return;
+        }else{
+                let username = document.getElementById('errorUsername')
+                username.innerHTML = 'Please enter valid email address for username !'
+                username.classList.add('errorMessage');
+                return;
         }
-
     }
     if (object.password == null || object.password == '') {
         let username = document.getElementById('errorPassword')

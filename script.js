@@ -16,15 +16,15 @@ let users = [
 ];
 
 let taskList = [
-    { 'taskId': 1, 'status': 'new', 'taskName': 'GUI Change', 'taskDescription': 'CSS change and validation', 'taskAmount': 100, 'createdBy': 'admin@gmail.com', 'assignTo': 'user@gmail.com', 'startDate': '2023-10-1', 'endDate': '2023-10-15' },
-    { 'taskId': 2, 'status': 'new', 'taskName': 'Model Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'client@gmail.com', 'startDate': '2023-10-15', 'endDate': '2023-10-30' },
-    { 'taskId': 3, 'status': 'new', 'taskName': 'API Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'admin@gmail.com', 'assignTo': 'client@gmail.com', 'startDate': '2023-10-15', 'endDate': '2023-10-30' },
-    { 'taskId': 4, 'status': 'new', 'taskName': 'Graphics Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'user3@gmail.com', 'startDate': '2023-10-15', 'endDate': '2023-10-30' },
+    { 'taskId': 1, 'status': 'new', 'taskName': 'GUI Change', 'taskDescription': 'CSS change and validation', 'taskAmount': 100, 'createdBy': 'admin@gmail.com', 'assignTo': 'user@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    { 'taskId': 2, 'status': 'new', 'taskName': 'Model Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    { 'taskId': 3, 'status': 'new', 'taskName': 'API Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'admin@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    { 'taskId': 4, 'status': 'new', 'taskName': 'Graphics Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'user3@gmail.com','workingHour':'-','startDate': '-', 'endDate': '-' },
 ]
 
 let childTaskList = [
-    // {'childTaskId':1, 'parentTaskId':1,'subTaskName':'button Changes','subTaskDescription':'button loader', 'subTaskAmount':10,'createdBy':'user@gmail.com', 'isCompleted':0},
-    // {'childTaskId':2, 'parentTaskId':2,'subTaskName':'API Model','subTaskDescription':'api model loader', 'subTaskAmount':30,'createdBy':'client@gmail.com','isCompleted':1},
+    // {'childTaskId':1, 'parentTaskId':1,'subTaskName':'button Changes','subTaskDescription':'button loader', 'subTaskAmount':10,'subTaskWorkingHour':'10','createdBy':'user@gmail.com', 'isCompleted':0},
+    // {'childTaskId':2, 'parentTaskId':2,'subTaskName':'API Model','subTaskDescription':'api model loader', 'subTaskAmount':30,'subTaskWorkingHour':'10','createdBy':'client@gmail.com','isCompleted':1},
 ]
 
 let URL = "http://127.0.0.1:5500/";

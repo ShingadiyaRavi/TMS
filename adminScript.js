@@ -38,8 +38,9 @@ function getTaskList(username) {
             row.insertCell(3).innerHTML = element.taskDescription;
             row.insertCell(4).innerHTML = element.taskAmount + '$';
             row.insertCell(5).innerHTML = element.assignTo;
-            row.insertCell(6).innerHTML = element.startDate;
-            row.insertCell(7).innerHTML = element.endDate;
+            row.insertCell(6).innerHTML = element.workingHour;
+            row.insertCell(7).innerHTML = element.startDate;
+            row.insertCell(8).innerHTML = element.endDate;
         }
     });
     clientUsers();
@@ -75,8 +76,10 @@ function createTask() {
         'taskAmount': document.getElementById('taskAmount').value,
         'createdBy': userInformation.username,
         'assignTo': document.getElementById('assignTo').value,
-        'startDate': document.getElementById('startDate').value,
-        'endDate': document.getElementById('endDate').value
+        'workingHour': '-',
+        'startDate': '-',
+        // 'endDate': document.getElementById('endDate').value
+        'endDate': '-'
     }
 
     if (object.taskName == null || object.taskName == undefined || object.taskName == '') {
@@ -100,16 +103,16 @@ function createTask() {
             return;
         }
     }
-    if (object.endDate != null || object.endDate != undefined || object.endDate != '') {
-        let start = document.getElementById('startDate').value;
-        let end = document.getElementById('endDate').value;
-        if (end < start) {
-            let date = document.getElementById('errorDate')
-            date.innerHTML = 'Task end date should be greater than start date'
-            date.classList.add('errorMessage');
-            return;
-        }
-    }
+    // if (object.endDate != null || object.endDate != undefined || object.endDate != '') {
+    //     let start = document.getElementById('startDate').value;
+    //     let end = document.getElementById('endDate').value;
+    //     if (end < start) {
+    //         let date = document.getElementById('errorDate')
+    //         date.innerHTML = 'Task end date should be greater than start date'
+    //         date.classList.add('errorMessage');
+    //         return;
+    //     }
+    // }
 
 
     let parent = document.getElementById('addItem');
@@ -121,8 +124,9 @@ function createTask() {
     row.insertCell(3).innerHTML = 'taskDescription';
     row.insertCell(4).innerHTML = 'taskAmount';
     row.insertCell(5).innerHTML = 'assignTo';
-    row.insertCell(6).innerHTML = 'startDate';
-    row.insertCell(7).innerHTML = 'endDate';
+    row.insertCell(6).innerHTML = 'workingHour';
+    row.insertCell(7).innerHTML = 'startDate';
+    row.insertCell(8).innerHTML = 'endDate';
 
 
     taskList.push(object);
@@ -133,12 +137,12 @@ function createTask() {
 }
 
 function openModal() {
-    const date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    document.getElementById('startDate').value = `${year}-${month}-${day}`;
-    document.getElementById('endDate').value = `${year}-${month}-${day + 15}`;
+    // const date = new Date();
+    // let day = date.getDate();
+    // let month = date.getMonth() + 1;
+    // let year = date.getFullYear();
+    // document.getElementById('startDate').value = `${year}-${month}-${day}`;
+    // document.getElementById('endDate').value = `${year}-${month}-${day + 15}`;
     document.getElementById('taskAmount').value = 10;
 }
 

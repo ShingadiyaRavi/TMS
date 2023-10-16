@@ -37,8 +37,9 @@ function getParentTaskList(username) {
             row.insertCell(2).innerHTML = element.taskName;
             row.insertCell(3).innerHTML = element.taskDescription;
             row.insertCell(4).innerHTML = element.taskAmount + '$';
-            row.insertCell(5).innerHTML = element.startDate;
-            row.insertCell(6).innerHTML = element.endDate;
+            row.insertCell(5).innerHTML = element.workingHour;
+            row.insertCell(6).innerHTML = element.startDate;
+            row.insertCell(7).innerHTML = element.endDate;
 
             const parentTaskList = document.getElementById("parentTaskDropDown");
             parentTaskList.options[parentTaskList.options.length] = new Option(element.taskName, element.taskId);
@@ -72,16 +73,15 @@ function getChildTaskList(username) {
             row.insertCell(2).innerHTML = element.subTaskName;
             row.insertCell(3).innerHTML = element.subTaskDescription;
             row.insertCell(4).innerHTML = element.subTaskAmount + '$';
+            row.insertCell(5).innerHTML = element.subTaskWorkingHour;
             if (element.isCompleted) {
                 // row.insertCell(5).innerHTML= '<input type="checkbox" id="check" value="'+element.isCompleted+'" checked="'+element.isCompleted+'" >'
-                row.insertCell(5).innerHTML = '<button type="button" class="btn btn-success" disabled>Completed</button>'
+                row.insertCell(6).innerHTML = '<button type="button" class="btn btn-success" disabled>Completed</button>'
             } else {
                 // row.insertCell(5).innerHTML= '<input type="checkbox" id="check" value="'+element.isCompleted+'">'
-                row.insertCell(5).innerHTML = '<button type="button" class="btn btn-warning" onclick="changeStatus(' + element.childTaskId + ',' + element.parentTaskId + ')" >Make It Complete</button>'
+                row.insertCell(6).innerHTML = '<button type="button" class="btn btn-warning" onclick="changeStatus(' + element.childTaskId + ',' + element.parentTaskId + ')" >Make It Complete</button>'
 
             }
-
-
         }
     });
 }
@@ -90,14 +90,18 @@ function getChildTaskList(username) {
 function createSubTask() {
     let childTaskList = JSON.parse(localStorage.getItem('childTaskList'));
     let parentTaskList = JSON.parse(localStorage.getItem('taskList'));
+
+    const date = new Date();
     let object = {
         'childTaskId': childTaskList.length + 1,
         'parentTaskId': document.getElementById('parentTaskDropDown').value,
         'subTaskName': document.getElementById('subTaskName').value,
         'subTaskDescription': document.getElementById('subTaskDescription').value,
         'subTaskAmount': document.getElementById('subTaskAmount').value,
+        'subTaskWorkingHour': '-',
         'createdBy': userInformation.username,
         'isCompleted': 0,
+        'startWorkingDate': Date.now(),
     }
 
     if (object.subTaskName == null || object.subTaskName == undefined || object.subTaskName == '') {
@@ -143,9 +147,9 @@ function createSubTask() {
         } else if (totalSum > actualAmount) {
             if ((actualAmount - totalSum) < 0) {
                 let subTaskAmount = document.getElementById('errorSubTaskAmount')
-            subTaskAmount.innerHTML = 'You need to add task amount less than or equal to :'+(actualAmount - (totalSum - parseInt(object.subTaskAmount)));
-            subTaskAmount.classList.add('errorMessage');
-            return;
+                subTaskAmount.innerHTML = 'You need to add task amount less than or equal to :' + (actualAmount - (totalSum - parseInt(object.subTaskAmount)));
+                subTaskAmount.classList.add('errorMessage');
+                return;
                 // alert("You need to add task amount less than or equal to : " + (actualAmount - (totalSum - parseInt(object.subTaskAmount))));
                 // return;
             }
@@ -160,7 +164,8 @@ function createSubTask() {
     row.insertCell(2).innerHTML = 'subTaskName';
     row.insertCell(3).innerHTML = 'subTaskDescription';
     row.insertCell(4).innerHTML = 'subTaskAmount';
-    row.insertCell(5).innerHTML = 'status';
+    row.insertCell(5).innerHTML = 'subTaskWorkingHour';
+    row.insertCell(6).innerHTML = 'status';
 
     childTaskList.push(object);
     localStorage.setItem('childTaskList', JSON.stringify(childTaskList));
@@ -170,6 +175,13 @@ function createSubTask() {
     parentData = parentData.map(x => {
         if (x.taskId == parseInt(childData.parentTaskId)) {
             x.status = 'active';
+            if (x.startDate == '-') {
+                const date = new Date();
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                x.startDate = `${year}-${month}-${day}`;
+            }
             return x;
         } else {
             return x;
@@ -189,16 +201,22 @@ function changeStatus(childId, parentId) {
     childData.forEach(element => {
         if (element.childTaskId == childId) {
             element.isCompleted = 1;
+            let getHoursDiffBetweenDates = Date.now() - element.startWorkingDate;
+            element.subTaskWorkingHour = parseFloat(getHoursDiffBetweenDates / 360000).toFixed(2);
         }
     });
+
     localStorage.setItem('childTaskList', JSON.stringify(childData));
 
     childData = JSON.parse(localStorage.getItem('childTaskList'));
     let parentData = JSON.parse(localStorage.getItem('taskList'));
 
+    let hour = 0;
     let parentCompleted = childData.map(x => {
         if (x.parentTaskId == parentId) {
             if (x.childTaskId == x.childTaskId && x.isCompleted == 1) {
+                hour = hour + parseFloat(x.subTaskWorkingHour);
+                hour.toFixed(2);
                 return 1;
             } else {
                 return 0;
@@ -210,11 +228,19 @@ function changeStatus(childId, parentId) {
         parentData.forEach(element => {
             if (element.taskId == parentId) {
                 element.status = 'completed';
+                element.workingHour = hour;
+                const date = new Date();
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                element.endDate = `${year}-${month}-${day}`;
             }
         });
     } else {
         // alert("Need complete all subtask which are related which same parent task");
     }
+
+
 
     localStorage.setItem('taskList', JSON.stringify(parentData));
     location.reload();
