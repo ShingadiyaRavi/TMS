@@ -38,7 +38,7 @@ function getTaskList(username) {
             row.insertCell(3).innerHTML = element.taskDescription;
             row.insertCell(4).innerHTML = element.taskAmount + '$';
             row.insertCell(5).innerHTML = element.assignTo;
-            row.insertCell(6).innerHTML = element.workingHour;
+            row.insertCell(6).innerHTML = parseFloat(element.workingHour).toFixed(2);
             row.insertCell(7).innerHTML = element.startDate;
             row.insertCell(8).innerHTML = element.endDate;
         }

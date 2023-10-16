@@ -37,7 +37,7 @@ function getParentTaskList(username) {
             row.insertCell(2).innerHTML = element.taskName;
             row.insertCell(3).innerHTML = element.taskDescription;
             row.insertCell(4).innerHTML = element.taskAmount + '$';
-            row.insertCell(5).innerHTML = element.workingHour;
+            row.insertCell(5).innerHTML = parseFloat(element.workingHour).toFixed(2);
             row.insertCell(6).innerHTML = element.startDate;
             row.insertCell(7).innerHTML = element.endDate;
 
@@ -73,7 +73,7 @@ function getChildTaskList(username) {
             row.insertCell(2).innerHTML = element.subTaskName;
             row.insertCell(3).innerHTML = element.subTaskDescription;
             row.insertCell(4).innerHTML = element.subTaskAmount + '$';
-            row.insertCell(5).innerHTML = element.subTaskWorkingHour;
+            row.insertCell(5).innerHTML = parseFloat(element.subTaskWorkingHour).toFixed(2);
             if (element.isCompleted) {
                 // row.insertCell(5).innerHTML= '<input type="checkbox" id="check" value="'+element.isCompleted+'" checked="'+element.isCompleted+'" >'
                 row.insertCell(6).innerHTML = '<button type="button" class="btn btn-success" disabled>Completed</button>'

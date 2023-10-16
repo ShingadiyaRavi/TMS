@@ -16,10 +16,10 @@ let users = [
 ];
 
 let taskList = [
-    { 'taskId': 1, 'status': 'new', 'taskName': 'GUI Change', 'taskDescription': 'CSS change and validation', 'taskAmount': 100, 'createdBy': 'admin@gmail.com', 'assignTo': 'user@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
-    { 'taskId': 2, 'status': 'new', 'taskName': 'Model Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
-    { 'taskId': 3, 'status': 'new', 'taskName': 'API Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'admin@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
-    { 'taskId': 4, 'status': 'new', 'taskName': 'Graphics Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'user3@gmail.com','workingHour':'-','startDate': '-', 'endDate': '-' },
+    // { 'taskId': 1, 'status': 'new', 'taskName': 'GUI Change', 'taskDescription': 'CSS change and validation', 'taskAmount': 100, 'createdBy': 'admin@gmail.com', 'assignTo': 'user@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    // { 'taskId': 2, 'status': 'new', 'taskName': 'Model Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    // { 'taskId': 3, 'status': 'new', 'taskName': 'API Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'admin@gmail.com', 'assignTo': 'client@gmail.com', 'workingHour':'-', 'startDate': '-', 'endDate': '-' },
+    // { 'taskId': 4, 'status': 'new', 'taskName': 'Graphics Chnages', 'taskDescription': 'API validation', 'taskAmount': 30, 'createdBy': 'demo@gmail.com', 'assignTo': 'user3@gmail.com','workingHour':'-','startDate': '-', 'endDate': '-' },
 ]
 
 let childTaskList = [
